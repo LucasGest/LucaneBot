@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Setup Bot Discord</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --purple: #9146ff;
+    --purple-dark: #6a0dad;
+    --purple-light: #b970ff;
+    --discord: #5865F2;
+    --green: #00d26a;
+    --bg: #0e0e14;
+    --card: #16161f;
+    --card2: #1e1e2e;
+    --border: #2e2e42;
+    --text: #e2e2f0;
+    --muted: #8888aa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 40px 24px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 52px;
+    position: relative;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(145,70,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #9146ff, #b970ff, #ff6b9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .subtitle { color: var(--muted); font-size: 1rem; font-family: 'Space Mono', monospace; }
+
+  .steps {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 64px;
+    bottom: -8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+  }
+
+  .step-num.discord { background: var(--discord); box-shadow: 0 0 24px rgba(88,101,242,0.4); }
+  .step-num.twitch  { background: var(--purple);  box-shadow: 0 0 24px rgba(145,70,255,0.4); }
+  .step-num.code    { background: #1a1a2e; border: 2px solid var(--border); color: var(--muted); }
+  .step-num.go      { background: var(--green);   box-shadow: 0 0 24px rgba(0,210,106,0.4); color: #000; }
+
+  .step-content {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-content::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .step:nth-child(1) .step-content::before { background: var(--discord); }
+  .step:nth-child(2) .step-content::before { background: var(--purple); }
+  .step:nth-child(3) .step-content::before { background: #ff6b9d; }
+  .step:nth-child(4) .step-content::before { background: var(--green); }
+
+  .step-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+  }
+
+  .instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .instruction {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--card2);
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+
+  .instruction-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .instruction-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .instruction-text a {
+    color: var(--purple-light);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .instruction-text a:hover { text-decoration: underline; }
+
+  code {
+    background: rgba(145,70,255,0.15);
+    border: 1px solid rgba(145,70,255,0.3);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--purple-light);
+  }
+
+  .env-block {
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.9;
+  }
+
+  .env-comment { color: #555577; }
+  .env-key     { color: var(--purple-light); }
+  .env-val     { color: #78dba0; }
+
+  .features-grid {
+    max-width: 860px;
+    margin: 40px auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--purple);
+  }
+
+  .feature-icon { font-size: 2rem; margin-bottom: 10px; }
+  .feature-name { font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+  .feature-desc { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+
+  .terminal {
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 2;
+  }
+
+  .t-line::before { content: '$ '; color: var(--purple); }
+  .t-out { color: var(--green); margin-left: 18px; }
+  .t-out::before { content: '> '; color: var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🤖 Bot Discord + Twitch</h1>
+  <p class="subtitle">// guide d'installation complet</p>
+</div>
+
+<div class="steps">
+
+  <!-- STEP 1 - Discord -->
+  <div class="step">
+    <div class="step-num discord">1</div>
+    <div class="step-content">
+      <div class="step-title">
+        🟦 Créer le Bot Discord
+        <span class="badge">discord.com/developers</span>
+      </div>
+      <div class="instructions">
+        <div class="instruction">
+          <span class="instruction-icon">🌐</span>
+          <span class="instruction-text">Va sur <a href="https://discord.com/developers/applications" target="_blank">discord.com/developers/applications</a> → <strong>New Application</strong> → donne un nom au bot</span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">🤖</span>
+          <span class="instruction-text">Dans le menu <strong>Bot</strong> → clique <strong>Reset Token</strong> → copie le <code>DISCORD_TOKEN</code></span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">🔑</span>
+          <span class="instruction-text">Dans <strong>General Information</strong> → copie l'<code>Application ID</code> = ton <code>CLIENT_ID</code></span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">✅</span>
+          <span class="instruction-text">Dans <strong>Bot</strong> → active <strong>Server Members Intent</strong> et <strong>Message Content Intent</strong></span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">📨</span>
+          <span class="instruction-text">Dans <strong>OAuth2 → URL Generator</strong> → sélectionne <code>bot</code> + <code>applications.commands</code> → permissions : <code>Administrator</code> → copie l'URL et invite le bot sur ton serveur</span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">🆔</span>
+          <span class="instruction-text">Dans Discord, active le <strong>Mode développeur</strong> (Paramètres → Avancés) → clique droit sur ton serveur → <strong>Copier l'identifiant</strong> = ton <code>GUILD_ID</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 - Twitch -->
+  <div class="step">
+    <div class="step-num twitch">2</div>
+    <div class="step-content">
+      <div class="step-title">
+        🟣 Obtenir les clés Twitch API
+        <span class="badge">dev.twitch.tv</span>
+      </div>
+      <div class="instructions">
+        <div class="instruction">
+          <span class="instruction-icon">🌐</span>
+          <span class="instruction-text">Va sur <a href="https://dev.twitch.tv/console" target="_blank">dev.twitch.tv/console</a> → <strong>Register Your Application</strong></span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">📝</span>
+          <span class="instruction-text">Nom : <code>MonBotDiscord</code> — OAuth Redirect : <code>http://localhost</code> — Category : <code>Chat Bot</code></span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">🔑</span>
+          <span class="instruction-text">Clique sur <strong>Manage</strong> → copie le <code>Client ID</code> et génère un <code>New Secret</code> = ton <code>Client Secret</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 - Installation -->
+  <div class="step">
+    <div class="step-num code">3</div>
+    <div class="step-content">
+      <div class="step-title">
+        📦 Installation et configuration
+      </div>
+      <div class="instructions">
+        <div class="instruction">
+          <span class="instruction-icon">📁</span>
+          <span class="instruction-text">Extrais les fichiers du bot dans un dossier, puis installe les dépendances :</span>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="t-line">cd discord-bot</div>
+        <div class="t-line">npm install</div>
+        <div class="t-out">added 63 packages in 4s</div>
+        <div class="t-line">cp .env.example .env</div>
+      </div>
+      <div class="instructions" style="margin-top:14px">
+        <div class="instruction">
+          <span class="instruction-icon">✏️</span>
+          <span class="instruction-text">Ouvre <code>.env</code> et remplis <strong>toutes les valeurs</strong> avec tes IDs copiés aux étapes 1 et 2</span>
+        </div>
+        <div class="instruction">
+          <span class="instruction-icon">🆔</span>
+          <span class="instruction-text">Pour les IDs des salons et rôles Discord → clique droit dessus dans Discord → <strong>Copier l'identifiant</strong></span>
+        </div>
+      </div>
+      <div class="env-block">
+        <div><span class="env-comment"># Discord</span></div>
+        <div><span class="env-key">DISCORD_TOKEN</span>=<span class="env-val">MTI3...</span></div>
+        <div><span class="env-key">CLIENT_ID</span>=<span class="env-val">11234567890</span></div>
+        <div><span class="env-key">GUILD_ID</span>=<span class="env-val">98765432100</span></div>
+        <div><span class="env-comment"># Twitch</span></div>
+        <div><span class="env-key">TWITCH_CLIENT_ID</span>=<span class="env-val">abc123def456</span></div>
+        <div><span class="env-key">TWITCH_CLIENT_SECRET</span>=<span class="env-val">xyz789...</span></div>
+        <div><span class="env-key">TWITCH_USERNAME</span>=<span class="env-val">ton_pseudo</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 - Lancement -->
+  <div class="step">
+    <div class="step-num go">4</div>
+    <div class="step-content">
+      <div class="step-title">
+        🚀 Lancer le bot
+      </div>
+      <div class="terminal">
+        <div class="t-line">node index.js</div>
+        <div class="t-out">✅ Connecté : MonBot#1234</div>
+        <div class="t-out">✅ Commandes slash enregistrées</div>
+        <div class="t-out">🟣 Poller Twitch démarré</div>
+      </div>
+      <div class="instructions" style="margin-top:14px">
+        <div class="instruction">
+          <span class="instruction-icon">💡</span>
+          <span class="instruction-text">Pour le laisser tourner 24h/24 en production, utilise <a href="https://pm2.keymetrics.io" target="_blank">PM2</a> : <code>npm i -g pm2 && pm2 start index.js --name monbot</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Features recap -->
+<div class="features-grid">
+  <div class="feature-card">
+    <div class="feature-icon">🔴</div>
+    <div class="feature-name">Notif Live</div>
+    <div class="feature-desc">Alerte automatique dans ton salon quand tu passes en live sur Twitch</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">⭐</div>
+    <div class="feature-name">Système XP</div>
+    <div class="feature-desc">+15 XP par message (cooldown 1 min), niveaux et rôles automatiques</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">👋</div>
+    <div class="feature-name">Bienvenue</div>
+    <div class="feature-desc">Message embed personnalisé + rôle automatique à l'arrivée</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🎬</div>
+    <div class="feature-name">/clip & /uptime</div>
+    <div class="feature-desc">Commandes pour afficher les stats Twitch en direct</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🏆</div>
+    <div class="feature-name">/leaderboard</div>
+    <div class="feature-desc">Top 10 des membres les plus actifs du serveur</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🎭</div>
+    <div class="feature-name">Rôles auto</div>
+    <div class="feature-desc">Rôle "viewer" pendant les lives, rôles de niveau 5/10/20</div>
+  </div>
+</div>
+
+</body>
+</html>
