@@ -1,8 +1,14 @@
 {
-  "name": "discord-twitch-bot",
+  "name": "lucanebot",
   "version": "1.0.0",
-  "description": "Bot Discord avec intégration Twitch, XP et notifications live",
+  "description": "Bot Discord × Twitch pour la communauté de Lucanemone",
   "main": "index.js",
+  "author": {
+    "name": "LucasGest",
+    "url": "https://github.com/LucasGest"
+  },
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
