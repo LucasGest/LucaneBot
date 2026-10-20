@@ -7,6 +7,7 @@ Bot Discord de la communauté **[Lucanemone](https://twitch.tv/lucanemone)**.
 - 🛡️ **Automod** : anti-flood, anti-doublons, anti-mentions en masse, anti-invitations, anti-liens d'arnaque. La sanction est un timeout qui double à chaque récidive.
 - 🍯 **Honeypot** : un salon piège où tout message entraîne une sanction automatique.
 - 🔴 **Statut live** : un salon renommé « En ligne » ou « Hors ligne » selon le live Twitch.
+- 📣 **Annonce de live** : ping, titre, jeu, viewers et aperçu, mis à jour pendant le live. L'annonce passe en « Live terminé » à la fin, avec la durée et le pic de viewers.
 - 📋 **Logs** : démarrage, commandes, erreurs, arrivées (avec une alerte pour les comptes récents) et sanctions.
 
 ## Installation

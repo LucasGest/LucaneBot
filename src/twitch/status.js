@@ -1,7 +1,9 @@
-// Statut live d'une chaîne Twitch : true (en live), false (hors ligne), null (inconnu / erreur)
-// API officielle Twitch si TWITCH_CLIENT_ID + TWITCH_CLIENT_SECRET sont remplis, sinon decapi.me (sans clé)
+// État d'une chaîne Twitch : { live, stream, user } ou null (inconnu / erreur)
+// API officielle Twitch si TWITCH_CLIENT_ID + TWITCH_CLIENT_SECRET sont remplis, sinon decapi.me (sans clé,
+// mais seulement en ligne / hors ligne, sans titre ni jeu)
 
 let appToken = null; // { value, expires }
+const users = new Map(); // login → { profile_image_url, display_name, … }
 
 async function getAppToken() {
   if (appToken && Date.now() < appToken.expires) return appToken.value;
@@ -17,26 +19,34 @@ async function getAppToken() {
   return appToken.value;
 }
 
-async function viaHelix(login) {
-  const res = await fetch(`https://api.twitch.tv/helix/streams?user_login=${login}`, {
+async function helix(path) {
+  const res = await fetch(`https://api.twitch.tv/helix/${path}`, {
     headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID, Authorization: `Bearer ${await getAppToken()}` },
   });
   if (res.status === 401) appToken = null;
   if (!res.ok) throw new Error(`API Twitch (${res.status})`);
-  const { data } = await res.json();
-  return data.length > 0;
+  return (await res.json()).data;
+}
+
+async function viaHelix(login) {
+  if (!users.has(login)) {
+    const [user] = await helix(`users?login=${login}`);
+    if (user) users.set(login, user);
+  }
+  const [stream] = await helix(`streams?user_login=${login}`);
+  return { live: Boolean(stream), stream: stream ?? null, user: users.get(login) ?? null };
 }
 
 async function viaDecapi(login) {
   const res = await fetch(`https://decapi.me/twitch/uptime/${login}`);
   if (!res.ok) throw new Error(`decapi (${res.status})`);
   const text = await res.text();
-  if (/offline/i.test(text)) return false;
-  if (/\d+\s*(second|minute|hour)/i.test(text)) return true;
+  if (/offline/i.test(text)) return { live: false, stream: null, user: null };
+  if (/\d+\s*(second|minute|hour)/i.test(text)) return { live: true, stream: null, user: null };
   throw new Error(`Réponse decapi inattendue : ${text.slice(0, 100)}`);
 }
 
-export async function isLive(login) {
+export async function getChannelState(login) {
   try {
     const useHelix = process.env.TWITCH_CLIENT_ID && process.env.TWITCH_CLIENT_SECRET;
     return await (useHelix ? viaHelix(login) : viaDecapi(login));

@@ -1,6 +1,6 @@
 import { Events } from 'discord.js';
 import { log } from '../utils/logger.js';
-import { startLiveChannel } from '../twitch/liveChannel.js';
+import { startLiveTracker } from '../twitch/liveTracker.js';
 
 export default {
   name: Events.ClientReady,
@@ -15,6 +15,6 @@ export default {
       fields: [{ name: 'Commandes chargées', value: String(client.commands.size), inline: true }],
     });
 
-    startLiveChannel(client);
+    startLiveTracker(client);
   },
 };

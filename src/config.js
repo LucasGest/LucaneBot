@@ -41,6 +41,20 @@ export const twitch = {
   offlineConfirmations: 3,
 };
 
+// Annonce de live dans #live ({url} = lien de la chaîne)
+export const liveAnnouncement = {
+  message:
+    'Votre streamer préféré est actuellement en live !\n'
+    + 'Faisons grandir la bête, le titan, le succulent dieu, l\'incroyable Hulk !!!! kof kof\n\n'
+    + 'Rejoignez le sur : {url} @everyone',
+  liveColor: 0x2ec5ff, // cyan néon
+  endedColor: 0x4f545c, // gris
+  // Mise à jour des viewers / titre / aperçu pendant le live
+  updateEveryMinutes: 5,
+  // Si le bot démarre alors que le live a commencé depuis plus longtemps que ça : pas de ping
+  silentAfterMinutes: 10,
+};
+
 // Rôles exemptés de l'automod (en plus de ceux qui ont la permission « Gérer les messages »)
 export const exemptRoleIds = (process.env.EXEMPT_ROLE_IDS ?? '')
   .split(',')
