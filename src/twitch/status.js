@@ -28,13 +28,35 @@ async function helix(path) {
   return (await res.json()).data;
 }
 
-async function viaHelix(login) {
+async function getUser(login) {
   if (!users.has(login)) {
     const [user] = await helix(`users?login=${login}`);
     if (user) users.set(login, user);
   }
+  return users.get(login) ?? null;
+}
+
+async function viaHelix(login) {
+  const user = await getUser(login);
   const [stream] = await helix(`streams?user_login=${login}`);
-  return { live: Boolean(stream), stream: stream ?? null, user: users.get(login) ?? null };
+  return { live: Boolean(stream), stream: stream ?? null, user };
+}
+
+// Nombre de followers (avec un token d'appli, Twitch ne donne que le total : c'est tout ce qu'il faut)
+export async function getFollowerCount(login) {
+  if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) return null;
+  try {
+    const user = await getUser(login);
+    if (!user) return null;
+    const res = await fetch(`https://api.twitch.tv/helix/channels/followers?broadcaster_id=${user.id}`, {
+      headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID, Authorization: `Bearer ${await getAppToken()}` },
+    });
+    if (!res.ok) throw new Error(`API Twitch (${res.status})`);
+    return (await res.json()).total;
+  } catch (error) {
+    console.error('⚠️ Followers Twitch indisponibles :', error.message);
+    return null;
+  }
 }
 
 async function viaDecapi(login) {

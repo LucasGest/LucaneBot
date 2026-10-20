@@ -1,5 +1,6 @@
 import { Events, time, TimestampStyles } from 'discord.js';
 import { log } from '../utils/logger.js';
+import { welcomeMember } from '../features/welcome.js';
 
 const NEW_ACCOUNT_DAYS = 7;
 
@@ -7,6 +8,8 @@ export default {
   name: Events.GuildMemberAdd,
 
   async execute(member) {
+    await welcomeMember(member);
+
     const ageDays = (Date.now() - member.user.createdTimestamp) / 86_400_000;
     const isNew = ageDays < NEW_ACCOUNT_DAYS;
 

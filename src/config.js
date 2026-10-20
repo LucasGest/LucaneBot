@@ -55,6 +55,19 @@ export const liveAnnouncement = {
   silentAfterMinutes: 10,
 };
 
+// Message de bienvenue ({user} = mention, {count} = nombre de membres)
+export const welcome = {
+  serverName: 'Lucanemone',
+  message: 'Bienvenue {user} sur le serveur ! 🎮 Installe-toi, va lire les règles et passe dire bonjour dans le général 💬',
+};
+
+// Salons vocaux compteurs (mis à jour toutes les X minutes — Discord limite les renommages)
+export const counters = {
+  updateEveryMinutes: 10,
+  members: '👥 Membres',
+  followers: '💜 Followers Twitch',
+};
+
 // Rôles exemptés de l'automod (en plus de ceux qui ont la permission « Gérer les messages »)
 export const exemptRoleIds = (process.env.EXEMPT_ROLE_IDS ?? '')
   .split(',')

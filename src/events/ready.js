@@ -1,6 +1,7 @@
 import { Events } from 'discord.js';
 import { log } from '../utils/logger.js';
 import { startLiveTracker } from '../twitch/liveTracker.js';
+import { startCounters } from '../features/counters.js';
 
 export default {
   name: Events.ClientReady,
@@ -16,5 +17,6 @@ export default {
     });
 
     startLiveTracker(client);
+    startCounters(client);
   },
 };
