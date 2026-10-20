@@ -1,35 +1,21 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { EmbedBuilder } from 'discord.js';
 import { security } from '../config.js';
 import { punish } from './sanction.js';
 
-const DATA_DIR = new URL('../../data/', import.meta.url);
-const FILE = new URL('honeypot.json', DATA_DIR);
+const TITLE = '🍯 NE PAS ÉCRIRE DANS CE SALON';
 
-// { channelId, messageId, count } — conservé sur disque pour survivre aux redémarrages
-function load() {
-  try {
-    return JSON.parse(readFileSync(FILE, 'utf8'));
-  } catch {
-    return { channelId: null, messageId: null, count: 0 };
-  }
-}
+// Rien n'est stocké sur disque (les hébergeurs gratuits l'effacent) :
+// le salon vient de HONEYPOT_CHANNEL_ID et le compteur est relu sur le panneau lui-même.
+let channelId = process.env.HONEYPOT_CHANNEL_ID || null;
 
-function save(state) {
-  mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(FILE, JSON.stringify(state, null, 2));
-}
-
-let state = load();
-
-export function isHoneypot(channelId) {
-  return state.channelId === channelId;
+export function isHoneypot(id) {
+  return channelId === id;
 }
 
 export function honeypotEmbed(count) {
   return new EmbedBuilder()
     .setColor(0xff9f1c)
-    .setTitle('🍯 NE PAS ÉCRIRE DANS CE SALON')
+    .setTitle(TITLE)
     .setDescription(
       'Ce salon est un **piège anti-bots / anti-spam**. Tout message envoyé ici entraîne une **sanction automatique**.\n\n'
       + 'Les vrais membres n\'ont **aucune raison** d\'écrire ici · ne le faites pas.',
@@ -38,18 +24,27 @@ export function honeypotEmbed(count) {
     .setFooter({ text: 'Lucanebot · Honeypot anti-spam' });
 }
 
+// Dernier panneau posté par le bot dans le salon
+async function findPanel(channel) {
+  const messages = await channel.messages.fetch({ limit: 50 });
+  return messages.find((m) => m.author.id === channel.client.user.id && m.embeds[0]?.title === TITLE) ?? null;
+}
+
+function readCount(panel) {
+  const value = panel?.embeds[0]?.fields.find((f) => f.name === 'Sanctions')?.value ?? '';
+  return Number(value.match(/\d+/)?.[0] ?? 0);
+}
+
 export async function setupHoneypot(channel) {
-  const message = await channel.send({ embeds: [honeypotEmbed(state.count)] });
-  state = { ...state, channelId: channel.id, messageId: message.id };
-  save(state);
+  const previous = await findPanel(channel).catch(() => null);
+  await channel.send({ embeds: [honeypotEmbed(readCount(previous))] });
+  await previous?.delete().catch(() => {});
+  channelId = channel.id;
 }
 
 export async function handleHoneypot(message) {
   await punish(message, 'salon piège (honeypot)', { forceMinutes: security.honeypot.timeoutMinutes });
 
-  state.count += 1;
-  save(state);
-
-  const panel = await message.channel.messages.fetch(state.messageId).catch(() => null);
-  await panel?.edit({ embeds: [honeypotEmbed(state.count)] }).catch(() => {});
+  const panel = await findPanel(message.channel).catch(() => null);
+  await panel?.edit({ embeds: [honeypotEmbed(readCount(panel) + 1)] }).catch(() => {});
 }

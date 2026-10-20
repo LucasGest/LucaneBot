@@ -17,6 +17,11 @@ export default {
   async execute(interaction) {
     const channel = interaction.options.getChannel('salon') ?? interaction.channel;
     await setupHoneypot(channel);
-    await interaction.reply({ content: `🍯 ${channel} est maintenant un salon piège.`, flags: MessageFlags.Ephemeral });
+    const permanent = process.env.HONEYPOT_CHANNEL_ID === channel.id;
+    await interaction.reply({
+      content: `🍯 ${channel} est maintenant un salon piège.`
+        + (permanent ? '' : `\n⚠️ Pour que ce soit permanent, mets \`HONEYPOT_CHANNEL_ID=${channel.id}\` dans les variables d'environnement.`),
+      flags: MessageFlags.Ephemeral,
+    });
   },
 };

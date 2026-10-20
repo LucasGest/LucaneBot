@@ -20,6 +20,12 @@ npm start
 
 Il faut Node.js 20.6 ou plus récent. Dans le [Developer Portal](https://discord.com/developers/applications), active les intents **Server Members** et **Message Content**.
 
+## Hébergement (Render + UptimeRobot)
+
+- Crée un **Web Service** Render avec la build command `npm install` et la start command `node src/index.js`.
+- Mets les variables de `.env.example` dans **Environment Variables**. Render fournit `PORT` tout seul, et le bot ouvre alors une mini page « OK ».
+- L'offre gratuite se met en veille après 15 min sans visite. Ajoute un moniteur **UptimeRobot** (HTTP, toutes les 5 min) sur l'URL `https://<ton-service>.onrender.com`.
+
 ## Permissions du bot
 
 Gérer les rôles, Gérer les salons, Gérer les messages, Exclure temporairement des membres, Voir les salons, Envoyer des messages, Intégrer des liens, Lire l'historique.

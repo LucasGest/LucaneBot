@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { loadModules } from './loader.js';
 import { log } from './utils/logger.js';
+import { startKeepAlive } from './utils/keepAlive.js';
 
 const client = new Client({
   intents: [
@@ -34,4 +35,5 @@ process.on('unhandledRejection', (error) => {
   log(client, { type: 'error', title: '❌ Erreur non gérée', description: `\`\`\`${error?.stack ?? error}\`\`\`` });
 });
 
+startKeepAlive(client);
 await client.login(process.env.DISCORD_TOKEN);
