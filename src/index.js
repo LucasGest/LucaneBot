@@ -35,5 +35,24 @@ process.on('unhandledRejection', (error) => {
   log(client, { type: 'error', title: '❌ Erreur non gérée', description: `\`\`\`${error?.stack ?? error}\`\`\`` });
 });
 
+// Diagnostic de connexion (utile sur les hébergeurs aux IP partagées que Discord limite parfois)
+client.rest.on('rateLimited', (info) => console.warn(`⏳ Limite Discord : ${info.method} ${info.route}, attente ${info.timeToReset} ms (global: ${info.global})`));
+client.on('shardError', (error) => console.error('❌ Erreur de connexion Discord :', error.message));
+client.on('shardDisconnect', (event) => console.warn(`⚠️ Déconnecté de Discord (code ${event.code})`));
+
+// Si la connexion n'aboutit pas, on quitte : l'hébergeur relance le bot (souvent sur une autre IP)
+const LOGIN_TIMEOUT_MS = 60_000;
+const watchdog = setTimeout(() => {
+  console.error(`❌ Pas connecté à Discord après ${LOGIN_TIMEOUT_MS / 1000} s, redémarrage`);
+  process.exit(1);
+}, LOGIN_TIMEOUT_MS);
+client.once('clientReady', () => clearTimeout(watchdog));
+
 startKeepAlive(client);
-await client.login(process.env.DISCORD_TOKEN);
+console.log('🔌 Connexion à Discord…');
+try {
+  await client.login(process.env.DISCORD_TOKEN);
+} catch (error) {
+  console.error('❌ Connexion refusée par Discord :', error.code ?? '', error.message);
+  process.exit(1);
+}
