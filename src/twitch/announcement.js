@@ -104,9 +104,9 @@ export async function onStart(client, state, login) {
   // Ancienne annonce restée « en live » (bot éteint à la fin du live précédent) : on la clôture
   if (open) await open.edit({ embeds: [endedEmbed(open, { startedAt: Date.parse(open.embeds[0].timestamp), peakViewers: readPeak(open) })], components: [watchButton(login, 'Voir la chaîne')] });
 
-  // Bot (re)démarré pendant un live commencé depuis longtemps : annonce discrète, sans ping
+  // Live commencé depuis longtemps (bot redémarré, erreur de permissions…) : annonce discrète, sans ping
   const startedAt = state.stream ? Date.parse(state.stream.started_at) : Date.now();
-  const silent = state.firstCheck && Date.now() - startedAt > liveAnnouncement.silentAfterMinutes * 60_000;
+  const silent = Date.now() - startedAt > liveAnnouncement.silentAfterMinutes * 60_000;
 
   const peakViewers = state.stream?.viewer_count ?? 0;
   const message = await channel.send({

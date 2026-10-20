@@ -36,8 +36,7 @@ export function startLiveTracker(client) {
 
       if (state.live) {
         offlineStreak = 0;
-        // firstCheck : le bot vient de démarrer et le live était déjà en cours
-        await emit(live ? 'onUpdate' : 'onStart', { ...state, firstCheck: live === null });
+        await emit(live ? 'onUpdate' : 'onStart', state);
         live = true;
       } else {
         offlineStreak += 1;

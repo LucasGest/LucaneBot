@@ -51,7 +51,7 @@ export const liveAnnouncement = {
   endedColor: 0x4f545c, // gris
   // Mise à jour des viewers / titre / aperçu pendant le live
   updateEveryMinutes: 5,
-  // Si le bot démarre alors que le live a commencé depuis plus longtemps que ça : pas de ping
+  // Si l'annonce part alors que le live a commencé depuis plus longtemps que ça : pas de ping
   silentAfterMinutes: 10,
 };
 
