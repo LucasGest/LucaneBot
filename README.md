@@ -1,3 +1,5 @@
+<img src="assets/logo.png" alt="LucaneBot" width="140" align="right">
+
 # 🎮 LucaneBot
 
 Bot Discord de la communauté **[Lucanemone](https://twitch.tv/lucanemone)**.
