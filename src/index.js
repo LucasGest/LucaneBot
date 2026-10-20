@@ -49,6 +49,23 @@ const watchdog = setTimeout(() => {
 client.once('clientReady', () => clearTimeout(watchdog));
 
 startKeepAlive(client);
+
+// Test direct de l'API : révèle un bannissement d'IP (429 Cloudflare) que discord.js attend en silence
+try {
+  const res = await fetch('https://discord.com/api/v10/gateway/bot', {
+    headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (res.ok) {
+    console.log('✅ API Discord joignable');
+  } else {
+    const body = (await res.text()).replace(/\s+/g, ' ').slice(0, 200);
+    console.error(`❌ API Discord : HTTP ${res.status} | retry-after: ${res.headers.get('retry-after')} | scope: ${res.headers.get('x-ratelimit-scope')} | ${body}`);
+  }
+} catch (error) {
+  console.error('❌ API Discord injoignable :', error.message);
+}
+
 console.log('🔌 Connexion à Discord…');
 try {
   await client.login(process.env.DISCORD_TOKEN);
