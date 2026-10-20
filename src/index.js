@@ -40,31 +40,42 @@ client.rest.on('rateLimited', (info) => console.warn(`⏳ Limite Discord : ${inf
 client.on('shardError', (error) => console.error('❌ Erreur de connexion Discord :', error.message));
 client.on('shardDisconnect', (event) => console.warn(`⚠️ Déconnecté de Discord (code ${event.code})`));
 
-// Si la connexion n'aboutit pas, on quitte : l'hébergeur relance le bot (souvent sur une autre IP)
-const LOGIN_TIMEOUT_MS = 60_000;
+startKeepAlive(client);
+
+// Sur les hébergeurs aux IP partagées, Discord/Cloudflare bannit parfois l'IP (HTTP 429).
+// discord.js attendrait en silence : on teste l'API nous-mêmes et on patiente le temps indiqué,
+// sans insister (insister prolonge le ban).
+async function waitForDiscordApi() {
+  for (;;) {
+    try {
+      const res = await fetch('https://discord.com/api/v10/gateway/bot', {
+        headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
+        signal: AbortSignal.timeout(15_000),
+      });
+      if (res.ok) return console.log('✅ API Discord joignable');
+      if (res.status !== 429) {
+        console.error(`❌ API Discord : HTTP ${res.status}`);
+        return;
+      }
+      const waitSeconds = Math.min(Number(res.headers.get('retry-after')) || 60, 30 * 60) + 5 + Math.floor(Math.random() * 25);
+      console.warn(`⛔ IP bannie temporairement par Discord (429), nouvel essai dans ${Math.round(waitSeconds / 60)} min`);
+      await new Promise((resolve) => setTimeout(resolve, waitSeconds * 1000));
+    } catch (error) {
+      console.error('❌ API Discord injoignable :', error.message, '— nouvel essai dans 30 s');
+      await new Promise((resolve) => setTimeout(resolve, 30_000));
+    }
+  }
+}
+
+await waitForDiscordApi();
+
+// Si la connexion bloque malgré tout, on quitte pour que l'hébergeur relance le bot
+const LOGIN_TIMEOUT_MS = 90_000;
 const watchdog = setTimeout(() => {
   console.error(`❌ Pas connecté à Discord après ${LOGIN_TIMEOUT_MS / 1000} s, redémarrage`);
   process.exit(1);
 }, LOGIN_TIMEOUT_MS);
 client.once('clientReady', () => clearTimeout(watchdog));
-
-startKeepAlive(client);
-
-// Test direct de l'API : révèle un bannissement d'IP (429 Cloudflare) que discord.js attend en silence
-try {
-  const res = await fetch('https://discord.com/api/v10/gateway/bot', {
-    headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (res.ok) {
-    console.log('✅ API Discord joignable');
-  } else {
-    const body = (await res.text()).replace(/\s+/g, ' ').slice(0, 200);
-    console.error(`❌ API Discord : HTTP ${res.status} | retry-after: ${res.headers.get('retry-after')} | scope: ${res.headers.get('x-ratelimit-scope')} | ${body}`);
-  }
-} catch (error) {
-  console.error('❌ API Discord injoignable :', error.message);
-}
 
 console.log('🔌 Connexion à Discord…');
 try {
