@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
-import { liveAnnouncement } from '../config.js';
+import { liveAnnouncement, selfRoles } from '../config.js';
 import { log } from '../utils/logger.js';
 
 // Annonce de live dans le salon LIVE_ANNOUNCE_CHANNEL_ID :
@@ -108,12 +108,16 @@ export async function onStart(client, state, login) {
   const startedAt = state.stream ? Date.parse(state.stream.started_at) : Date.now();
   const silent = Date.now() - startedAt > liveAnnouncement.silentAfterMinutes * 60_000;
 
+  // Ping du rôle Notifs live s'il existe, sinon @everyone
+  const notifRole = channel.guild.roles.cache.find((role) => role.name === selfRoles.liveNotifName);
+  const ping = notifRole ? `${notifRole}` : '@everyone';
+
   const peakViewers = state.stream?.viewer_count ?? 0;
   const message = await channel.send({
-    content: silent ? undefined : liveAnnouncement.message.replaceAll('{url}', streamUrl(login)),
+    content: silent ? undefined : liveAnnouncement.message.replaceAll('{url}', streamUrl(login)).replaceAll('{ping}', ping),
     embeds: [liveEmbed(state, login, peakViewers)],
     components: [watchButton(login, 'Regarder le live')],
-    allowedMentions: { parse: silent ? [] : ['everyone', 'roles'] },
+    allowedMentions: silent ? { parse: [] } : notifRole ? { roles: [notifRole.id] } : { parse: ['everyone'] },
   });
   current = { message, streamId, startedAt, peakViewers, lastEdit: Date.now() };
 

@@ -1,25 +1,37 @@
 import { Events, MessageFlags } from 'discord.js';
 import { log } from '../utils/logger.js';
+import { BUTTON_PREFIX, handleRoleButton } from '../features/selfRoles.js';
 
 export default {
   name: Events.InteractionCreate,
 
   async execute(interaction, client) {
-    if (!interaction.inGuild() || !interaction.isChatInputCommand()) return;
+    if (!interaction.inGuild()) return;
 
-    const command = client.commands.get(interaction.commandName);
-    if (!command) return;
+    let name;
+    let run;
+    if (interaction.isChatInputCommand()) {
+      const command = client.commands.get(interaction.commandName);
+      name = `/${interaction.commandName}`;
+      run = command && (() => command.execute(interaction));
+    } else if (interaction.isButton() && interaction.customId.startsWith(BUTTON_PREFIX)) {
+      name = 'panneau de rôles';
+      run = () => handleRoleButton(interaction);
+    }
+    if (!run) return;
 
     const where = `${interaction.user} dans ${interaction.channel ?? 'MP'}`;
 
     try {
-      await command.execute(interaction);
-      await log(client, { title: `⚡ /${interaction.commandName}`, description: where });
+      await run();
+      if (interaction.isChatInputCommand()) {
+        await log(client, { title: `⚡ ${name}`, description: where });
+      }
     } catch (error) {
-      console.error(`❌ Erreur dans /${interaction.commandName} :`, error);
+      console.error(`❌ Erreur dans ${name} :`, error);
       await log(client, {
         type: 'error',
-        title: `❌ Erreur dans /${interaction.commandName}`,
+        title: `❌ Erreur dans ${name}`,
         description: `${where}\n\`\`\`${error.stack ?? error}\`\`\``,
       });
 

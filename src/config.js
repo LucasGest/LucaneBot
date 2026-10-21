@@ -41,18 +41,42 @@ export const twitch = {
   offlineConfirmations: 3,
 };
 
-// Annonce de live dans #live ({url} = lien de la chaîne)
+// Annonce de live dans #live ({url} = lien de la chaîne, {ping} = rôle Notifs live, ou @everyone s'il n'existe pas)
 export const liveAnnouncement = {
   message:
     'Votre streamer préféré est actuellement en live !\n'
     + 'Faisons grandir la bête, le titan, le succulent dieu, l\'incroyable Hulk !!!! kof kof\n\n'
-    + 'Rejoignez le sur : {url} @everyone',
+    + 'Rejoignez le sur : {url} {ping}',
   liveColor: 0x2ec5ff, // cyan néon
   endedColor: 0x4f545c, // gris
   // Mise à jour des viewers / titre / aperçu pendant le live
   updateEveryMinutes: 5,
   // Si l'annonce part alors que le live a commencé depuis plus longtemps que ça : pas de ping
   silentAfterMinutes: 10,
+};
+
+// Rôles à choisir avec les boutons du panneau (/setup-roles) — retrouvés par leur nom
+export const selfRoles = {
+  // Rôle pingé par l'annonce de live (à la place de @everyone)
+  liveNotifName: '🔔 Notifs live',
+  groups: [
+    {
+      title: '🔔 Notifications',
+      roles: [
+        { name: '🔔 Notifs live', emoji: '🔴', label: 'Notifs live', description: 'Ping à chaque début de live', mentionable: false },
+        { name: '🎉 Notifs événements', emoji: '🎉', label: 'Notifs événements', description: 'Ping pour les events (Among Us du vendredi, soirées jeux…)', mentionable: true },
+      ],
+    },
+    {
+      title: '🎮 Jeux',
+      roles: [
+        { name: 'Valorant', emoji: '🔫', label: 'Valorant', description: 'Trouver des mates Valorant', mentionable: true },
+        { name: 'Minecraft', emoji: '⛏️', label: 'Minecraft', description: 'Les parties et serveurs Minecraft', mentionable: true },
+        { name: 'Among Us', emoji: '🔪', label: 'Among Us', description: 'Les games Among Us', mentionable: true },
+        { name: '🕹️ Autres jeux', emoji: '🕹️', label: 'Autres jeux', description: 'Partant(e) pour les jeux du moment', mentionable: true },
+      ],
+    },
+  ],
 };
 
 // Clips Twitch postés automatiquement dans #clips

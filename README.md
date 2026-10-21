@@ -10,6 +10,7 @@ Bot Discord de la communauté **[Lucanemone](https://twitch.tv/lucanemone)**.
 - 🍯 **Honeypot** : un salon piège où tout message entraîne une sanction automatique.
 - 🔴 **Statut live** : un salon renommé « En ligne » ou « Hors ligne » selon le live Twitch.
 - 🎭 **Rôle LIVE** : le streamer reçoit le rôle LIVE pendant ses lives.
+- 🎭 **Rôles à choisir** : un panneau de boutons (notifs live, événements, jeux). L'annonce de live pingue **@🔔 Notifs live**.
 - 🎬 **Clips** : chaque nouveau clip Twitch est posté dans #clips, avec le lecteur intégré.
 - 📣 **Annonce de live** : ping, titre, jeu, viewers et aperçu, mis à jour pendant le live. L'annonce passe en « Live terminé » à la fin, avec la durée et le pic de viewers.
 - 👋 **Bienvenue** : une image générée à chaque arrivée (avatar, pseudo, numéro de membre) dans le style arcade néon.
@@ -45,6 +46,7 @@ Gérer les rôles, Gérer les salons, Gérer les messages, Exclure temporairemen
 | `/ping` | Tout le monde | Vérifie que le bot répond |
 | `/planning` | Tout le monde | Affiche le planning des streams |
 | `/planning-modifier` | Admin | `jour`, `retirer`, `note`, `vider` |
+| `/setup-roles` | Admin | Crée les rôles et poste le panneau de boutons |
 | `/setup-compteurs` | Admin | Crée les salons vocaux compteurs |
 | `/test-bienvenue` | Admin | Aperçu de l'image de bienvenue |
 | `/setup-honeypot` | Admin | Transforme un salon en piège anti-bots |
