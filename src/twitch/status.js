@@ -42,6 +42,30 @@ async function viaHelix(login) {
   return { live: Boolean(stream), stream: stream ?? null, user };
 }
 
+const games = new Map(); // game_id → nom
+
+// Clips créés depuis une date (du plus ancien au plus récent), avec le nom du jeu
+export async function getClips(login, since) {
+  if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) return [];
+  try {
+    const user = await getUser(login);
+    if (!user) return [];
+    const clips = await helix(`clips?broadcaster_id=${user.id}&started_at=${since.toISOString()}&first=50`);
+
+    const unknown = [...new Set(clips.map((c) => c.game_id).filter((id) => id && !games.has(id)))];
+    if (unknown.length) {
+      for (const game of await helix(`games?${unknown.map((id) => `id=${id}`).join('&')}`)) games.set(game.id, game.name);
+    }
+
+    return clips
+      .map((clip) => ({ ...clip, game_name: games.get(clip.game_id) ?? null }))
+      .sort((a, b) => a.created_at.localeCompare(b.created_at));
+  } catch (error) {
+    console.error('⚠️ Clips Twitch indisponibles :', error.message);
+    return [];
+  }
+}
+
 // Nombre de followers (avec un token d'appli, Twitch ne donne que le total : c'est tout ce qu'il faut)
 export async function getFollowerCount(login) {
   if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) return null;

@@ -3,10 +3,11 @@ import { getChannelState } from './status.js';
 import { log } from '../utils/logger.js';
 import * as statusChannel from './statusChannel.js';
 import * as announcement from './announcement.js';
+import * as liveRole from './liveRole.js';
 
 // Surveille le live Twitch et prévient les modules : début, mise à jour, fin.
 // La fin n'est déclarée qu'après plusieurs vérifications "hors ligne" d'affilée (coupures de stream).
-const handlers = [statusChannel, announcement];
+const handlers = [statusChannel, announcement, liveRole];
 
 export function startLiveTracker(client) {
   const login = process.env.TWITCH_LOGIN;

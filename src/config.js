@@ -55,6 +55,13 @@ export const liveAnnouncement = {
   silentAfterMinutes: 10,
 };
 
+// Clips Twitch postés automatiquement dans #clips
+export const clips = {
+  checkEveryMinutes: 5,
+  // Fenêtre de recherche (les clips plus anciens ne sont jamais postés)
+  lookbackHours: 24,
+};
+
 // Message de bienvenue ({user} = mention, {count} = nombre de membres)
 export const welcome = {
   serverName: 'Lucanemone',
