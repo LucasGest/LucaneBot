@@ -16,8 +16,9 @@ const client = new Client({
   allowedMentions: { parse: ['users'] },
 });
 
-for (const key of ['DISCORD_TOKEN', 'CLIENT_ID', 'GUILD_ID', 'LOG_CHANNEL_ID']) {
-  if (!process.env[key]) console.warn(`⚠️ ${key} manquant dans .env`);
+// Sans ces deux-là, impossible de démarrer (le reste est vérifié une fois connecté, cf. utils/configCheck.js)
+for (const key of ['DISCORD_TOKEN', 'GUILD_ID']) {
+  if (!process.env[key]) console.error(`❌ ${key} manquant dans les variables d'environnement`);
 }
 
 client.commands = new Collection();

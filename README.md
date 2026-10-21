@@ -35,7 +35,7 @@ Il faut Node.js 20.6 ou plus récent. Dans le [Developer Portal](https://discord
 ## Hébergement (Render + UptimeRobot)
 
 - Crée un **Web Service** Render avec la build command `npm install` et la start command `node src/index.js`.
-- Mets les variables de `.env.example` dans **Environment Variables**. Render fournit `PORT` tout seul, et le bot ouvre alors une mini page « OK ».
+- Mets les variables de `.env.example` dans **Environment Variables**. Au démarrage, le bot vérifie chaque variable et poste le résultat dans le salon de logs (ou à la demande avec `/diagnostic`). Render fournit `PORT` tout seul, et le bot ouvre alors une mini page « OK ».
 - L'offre gratuite se met en veille après 15 min sans visite. Ajoute un moniteur **UptimeRobot** (HTTP, toutes les 5 min) sur l'URL `https://<ton-service>.onrender.com`.
 
 ## Permissions du bot
@@ -53,6 +53,7 @@ Gérer les rôles, Gérer les salons, Gérer les messages, Exclure temporairemen
 | `/kick` | Modos (Expulser) | Expulsion |
 | `/ban` `/unban` | Modos (Bannir) | Bannissement |
 | `/clear` | Modos (Gérer les messages) | Supprime jusqu'à 100 messages |
+| `/diagnostic` | Admin | Vérifie les variables d'environnement, salons, rôles et clés Twitch |
 | `/setup-roles` | Admin | Crée les rôles et poste le panneau de boutons |
 | `/setup-compteurs` | Admin | Crée les salons vocaux compteurs |
 | `/test-bienvenue` | Admin | Aperçu de l'image de bienvenue |
