@@ -99,6 +99,13 @@ export const counters = {
   followers: '💜 Followers Twitch',
 };
 
+// Commandes de modération
+export const moderation = {
+  // Exclusion automatique tous les X avertissements (3, 6, 9…)
+  autoTimeoutAfterWarns: 3,
+  autoTimeoutMinutes: 60,
+};
+
 // Logs des modifications du serveur
 export const serverLogs = {
   // Bots dont les actions sur les salons ne sont pas loguées (vocaux temporaires d'EmpyManager)

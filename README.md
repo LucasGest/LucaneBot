@@ -16,6 +16,7 @@ Bot Discord de la communauté **[Lucanemone](https://twitch.tv/lucanemone)**.
 - 👋 **Bienvenue** : une image générée à chaque arrivée (avatar, pseudo, numéro de membre) dans le style arcade néon.
 - 📊 **Compteurs** : des salons vocaux « 👥 Membres » et « 💜 Followers Twitch », mis à jour toutes les 10 min.
 - 📅 **Planning** : un encadré dans #planning, modifiable avec `/planning-modifier`.
+- 🔨 **Modération** : `/warn`, `/unwarn`, `/timeout`, `/untimeout`, `/kick`, `/ban`, `/unban`, `/clear`, `/sanctions`. Le casier est tenu dans un salon privé, la personne est prévenue en MP, et 3 avertissements donnent un timeout automatique.
 - 📋 **Logs** : démarrage, commandes, erreurs, arrivées (avec une alerte pour les comptes récents) et sanctions.
 - 📜 **Journal des modifications** : chaque changement du serveur (rôles, permissions, salons, réglages, bans) est logué avec son auteur, via le journal d'audit.
 
@@ -47,6 +48,10 @@ Gérer les rôles, Gérer les salons, Gérer les messages, Exclure temporairemen
 | `/ping` | Tout le monde | Vérifie que le bot répond |
 | `/planning` | Tout le monde | Affiche le planning des streams |
 | `/planning-modifier` | Admin | `jour`, `retirer`, `note`, `vider` |
+| `/warn` `/unwarn` `/timeout` `/untimeout` `/sanctions` | Modos (Exclure temporairement) | Avertissements, exclusions, casier |
+| `/kick` | Modos (Expulser) | Expulsion |
+| `/ban` `/unban` | Modos (Bannir) | Bannissement |
+| `/clear` | Modos (Gérer les messages) | Supprime jusqu'à 100 messages |
 | `/setup-roles` | Admin | Crée les rôles et poste le panneau de boutons |
 | `/setup-compteurs` | Admin | Crée les salons vocaux compteurs |
 | `/test-bienvenue` | Admin | Aperçu de l'image de bienvenue |

@@ -1,5 +1,6 @@
 import { security } from '../config.js';
 import { log } from '../utils/logger.js';
+import { record } from '../features/casier.js';
 
 const { baseTimeoutMinutes, maxTimeoutMinutes, strikeResetHours } = security.sanctions;
 
@@ -38,6 +39,14 @@ export async function punish(message, reason, { forceMinutes } = {}) {
     })
     .catch(() => null);
   if (warning) setTimeout(() => warning.delete().catch(() => {}), 8_000);
+
+  await record(client, {
+    type: 'automod',
+    user: member.user,
+    moderator: null,
+    reason: `${reason} — « ${(message.content || '').slice(0, 300)} »`,
+    duration: timeoutOk ? `${minutes} min` : null,
+  }).catch(() => {});
 
   await log(client, {
     type: 'warn',
