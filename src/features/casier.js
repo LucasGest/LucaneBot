@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, escapeMarkdown } from 'discord.js';
 
 // Casier des sanctions : chaque sanction est un message dans SANCTIONS_CHANNEL_ID (rien sur disque).
 // Le pied de page « casier:<userId>:<type> » permet de retrouver l'historique d'un membre.
@@ -29,7 +29,7 @@ export async function record(client, { type, user, moderator, reason, duration }
     .setTitle(TYPES[type].label)
     .setThumbnail(user.displayAvatarURL({ size: 128 }))
     .addFields(
-      { name: 'Membre', value: `${user} (${user.tag})`, inline: true },
+      { name: 'Membre', value: `${user} (${escapeMarkdown(user.tag)})`, inline: true },
       { name: 'Par', value: moderator ? `${moderator}` : 'Automod', inline: true },
     )
     .setFooter({ text: `${FOOTER}${user.id}:${type}` })

@@ -1,4 +1,4 @@
-import { EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, time, TimestampStyles } from 'discord.js';
+import { EmbedBuilder, MessageFlags, PermissionFlagsBits, SlashCommandBuilder, escapeMarkdown, time, TimestampStyles } from 'discord.js';
 import { TYPES, history } from '../../features/casier.js';
 
 export default {
@@ -25,7 +25,7 @@ export default {
 
     const embed = new EmbedBuilder()
       .setColor(list.length ? 0xff9f1c : 0x3ddc84)
-      .setTitle(`📋 Casier de ${user.tag}`)
+      .setTitle(`📋 Casier de ${escapeMarkdown(user.tag)}`)
       .setThumbnail(user.displayAvatarURL({ size: 128 }))
       .setDescription(list.length ? `${counts.join(' · ')}\n\n${lines.join('\n')}` : '✨ Casier vierge, aucune sanction.')
       .setFooter({ text: list.length > 15 ? `15 plus récentes sur ${list.length}` : `${list.length} sanction(s)` });
