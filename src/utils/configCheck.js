@@ -28,6 +28,8 @@ async function checkChannel(client, id, need) {
   const perms = channel.permissionsFor(client.user);
   if (!perms?.has(PermissionFlagsBits.ViewChannel)) return 'le bot ne voit pas ce salon';
   if (need === 'renommer' && !perms.has(PermissionFlagsBits.ManageChannels)) return 'le bot ne peut pas le renommer';
+  // Discord exige aussi « Se connecter » pour modifier un salon vocal
+  if (need === 'renommer' && channel.isVoiceBased() && !perms.has(PermissionFlagsBits.Connect)) return 'le bot doit pouvoir s\'y connecter pour le renommer';
   if ((need === 'écrire' || need === 'logs') && !perms.has(PermissionFlagsBits.SendMessages)) return 'le bot ne peut pas y écrire';
   return null;
 }
