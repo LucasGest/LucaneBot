@@ -8,6 +8,13 @@ export default {
   name: Events.GuildMemberAdd,
 
   async execute(member) {
+    // Rôle de base donné à tout nouvel arrivant (indépendant des questions d'onboarding)
+    const autoRoleId = process.env.AUTO_ROLE_ID;
+    if (autoRoleId && !member.user.bot) {
+      await member.roles.add(autoRoleId, 'Rôle automatique à l\'arrivée').catch((error) =>
+        log(member.client, { type: 'error', title: '❌ Rôle automatique', description: `${member}\n\`${error.message}\`` }));
+    }
+
     await welcomeMember(member);
 
     const ageDays = (Date.now() - member.user.createdTimestamp) / 86_400_000;
