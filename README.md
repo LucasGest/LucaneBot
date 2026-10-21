@@ -14,6 +14,7 @@ Bot Discord de la communauté **[Lucanemone](https://twitch.tv/lucanemone)**.
 - 🎬 **Clips** : chaque nouveau clip Twitch est posté dans #clips, avec le lecteur intégré.
 - 📣 **Annonce de live** : ping, titre, jeu, viewers et aperçu, mis à jour pendant le live. L'annonce passe en « Live terminé » à la fin, avec la durée et le pic de viewers.
 - 🏷️ **Rôle automatique** : Followers est donné à chaque arrivée.
+- 🎉 **Paliers de followers** : 300, 350, 400… fêtés sur Discord. Une hausse brutale déclenche une alerte follow-bots au lieu d'une fête.
 - 👋 **Bienvenue** : une image générée à chaque arrivée (avatar, pseudo, numéro de membre) dans le style arcade néon.
 - 📊 **Compteurs** : des salons vocaux « 👥 Membres » et « 💜 Followers Twitch », mis à jour toutes les 10 min.
 - 📅 **Planning** : un encadré dans #planning, modifiable avec `/planning-modifier`.

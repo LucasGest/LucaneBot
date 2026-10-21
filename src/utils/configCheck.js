@@ -18,6 +18,7 @@ const VARIABLES = [
   { name: 'WELCOME_CHANNEL_ID', feature: 'image de bienvenue', channel: 'écrire' },
   { name: 'PLANNING_CHANNEL_ID', feature: 'planning', channel: 'écrire' },
   { name: 'SANCTIONS_CHANNEL_ID', feature: 'casier des sanctions', channel: 'écrire' },
+  { name: 'MILESTONES_CHANNEL_ID', feature: 'fête des paliers de followers', channel: 'écrire' },
   { name: 'AUTO_ROLE_ID', feature: 'Followers à l\'arrivée', role: true },
 ];
 

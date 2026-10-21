@@ -4,6 +4,7 @@ import { checkConfig, formatReport } from '../utils/configCheck.js';
 import { startLiveTracker } from '../twitch/liveTracker.js';
 import { startCounters } from '../features/counters.js';
 import { startClips } from '../features/clips.js';
+import { startMilestones } from '../features/milestones.js';
 
 export default {
   name: Events.ClientReady,
@@ -29,5 +30,6 @@ export default {
     startLiveTracker(client);
     startCounters(client);
     startClips(client);
+    startMilestones(client);
   },
 };

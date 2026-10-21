@@ -86,6 +86,14 @@ export const clips = {
   lookbackHours: 24,
 };
 
+// Paliers de followers Twitch fêtés sur Discord
+export const milestones = {
+  step: 50, // 300, 350, 400…
+  checkEveryMinutes: 10,
+  // Au-delà de ce nombre de nouveaux followers entre deux relevés : alerte follow-bots au lieu d'une fête
+  raidAlertJump: 100,
+};
+
 // Message de bienvenue ({user} = mention, {count} = nombre de membres)
 export const welcome = {
   serverName: 'Lucanemone',
