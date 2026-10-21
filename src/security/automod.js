@@ -17,7 +17,11 @@ const history = new Map();
 export function checkSpam(message) {
   const now = Date.now();
   const keepMs = Math.max(antiSpam.perSeconds, antiSpam.duplicateSeconds) * 1000;
-  const content = message.content.trim().toLowerCase();
+  // Version simplifiée du message pour les doublons : « SPAM !! », « spam. » et « s p a m » comptent pareil
+  const content = message.content
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]/gu, '');
 
   const entries = (history.get(message.author.id) ?? []).filter((e) => now - e.time < keepMs);
   entries.push({ time: now, content });

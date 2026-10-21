@@ -13,6 +13,14 @@ export default {
     if (interaction.isChatInputCommand()) {
       const command = client.commands.get(interaction.commandName);
       name = `/${interaction.commandName}`;
+
+      // Double sécurité : la permission par défaut de la commande est revérifiée ici, au cas où
+      // les réglages Discord (Paramètres → Intégrations) l'auraient ouverte à plus de monde
+      const required = command?.data.default_member_permissions;
+      if (required && !interaction.memberPermissions.has(BigInt(required))) {
+        await log(client, { type: 'warn', title: `⛔ ${name} refusée`, description: `${interaction.user} n'a pas la permission requise` });
+        return interaction.reply({ content: '⛔ Tu n\'as pas la permission d\'utiliser cette commande.', flags: MessageFlags.Ephemeral });
+      }
       run = command && (() => command.execute(interaction));
     } else if (interaction.isButton() && interaction.customId.startsWith(BUTTON_PREFIX)) {
       name = 'panneau de rôles';
