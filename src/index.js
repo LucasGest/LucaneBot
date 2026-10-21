@@ -10,6 +10,7 @@ const client = new Client({
     GatewayIntentBits.GuildMembers, // privilégié : arrivées
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent, // privilégié : automod
+    GatewayIntentBits.GuildModeration, // journal d'audit → logs des modifications du serveur
   ],
   // Le bot ne peut jamais pinger @everyone, @here ou un rôle, même par erreur
   allowedMentions: { parse: ['users'] },

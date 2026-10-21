@@ -99,6 +99,13 @@ export const counters = {
   followers: '💜 Followers Twitch',
 };
 
+// Logs des modifications du serveur
+export const serverLogs = {
+  // Bots dont les actions sur les salons ne sont pas loguées (vocaux temporaires d'EmpyManager)
+  // Leurs modifications de rôles, de réglages ou leurs sanctions restent loguées
+  quietBotIds: ['719236419230367798'],
+};
+
 // Rôles exemptés de l'automod (en plus de ceux qui ont la permission « Gérer les messages »)
 export const exemptRoleIds = (process.env.EXEMPT_ROLE_IDS ?? '')
   .split(',')

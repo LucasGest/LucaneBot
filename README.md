@@ -17,6 +17,7 @@ Bot Discord de la communauté **[Lucanemone](https://twitch.tv/lucanemone)**.
 - 📊 **Compteurs** : des salons vocaux « 👥 Membres » et « 💜 Followers Twitch », mis à jour toutes les 10 min.
 - 📅 **Planning** : un encadré dans #planning, modifiable avec `/planning-modifier`.
 - 📋 **Logs** : démarrage, commandes, erreurs, arrivées (avec une alerte pour les comptes récents) et sanctions.
+- 📜 **Journal des modifications** : chaque changement du serveur (rôles, permissions, salons, réglages, bans) est logué avec son auteur, via le journal d'audit.
 
 ## Installation
 
@@ -37,7 +38,7 @@ Il faut Node.js 20.6 ou plus récent. Dans le [Developer Portal](https://discord
 
 ## Permissions du bot
 
-Gérer les rôles, Gérer les salons, Gérer les messages, Exclure temporairement des membres, Voir les salons, Envoyer des messages, Intégrer des liens, Lire l'historique.
+Gérer les rôles, Gérer les salons, Gérer les messages, Exclure temporairement des membres, Mentionner @everyone (pour pinger le rôle Notifs live), Voir les logs du serveur, Voir les salons, Envoyer des messages, Intégrer des liens, Lire l'historique.
 
 ## Commandes
 
