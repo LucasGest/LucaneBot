@@ -20,4 +20,7 @@ async function rename(client, live, login) {
 }
 
 export const onStart = (client, state, login) => rename(client, true, login);
+// Rattrapage : si le renommage du début a échoué (permissions corrigées depuis), il est retenté à chaque contrôle.
+// Sans risque pour la limite Discord : rename() ne fait rien si le nom est déjà le bon.
+export const onUpdate = (client, state, login) => rename(client, true, login);
 export const onEnd = (client, state, login) => rename(client, false, login);
